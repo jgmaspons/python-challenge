@@ -3,9 +3,9 @@ import csv
 
 #cereal_csv = os.path.join("..", "Resources", "cereal.csv")
 
-# Open and read csv
-# with open(cereal_csv, newline="") as csvfile:
-    #csvreader = csv.reader(csvfile, delimiter=",")
+            # Open and read csv
+            # with open(cereal_csv, newline="") as csvfile:
+                #csvreader = csv.reader(csvfile, delimiter=",")
 
 
 # NEW CODE

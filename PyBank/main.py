@@ -10,11 +10,12 @@ input_file = os.path.join('../Resources/', 'budget_data.csv')
 dateRec = []
 profit_loss = []
 value_sum = []
-change_profit_loss = []
+profit_change = []
+profit_change_sum = []
 
 # Define initial values of store data lists
 value_sum = 0
-change_profit_loss = 0
+profit_change_sum = 0
 
 # Open and read csv
 with open(input_file, 'r', newline="") as budget_data:
@@ -34,15 +35,41 @@ with open(input_file, 'r', newline="") as budget_data:
             
         # Calculate total number of months included in the dataset
         value = len(list(profit_loss))
-        
-        
+          
         # Calculate net total amount of profit/losses over the entire period
         value_sum += float(row[1])
-         
-    # Add change in profit/loss data to its respective list
-    #for i in len(list(profit_loss): 
-        #change_profit_loss.append(float(profit_loss([i]) - float(profit_loss([i-1]))     
 
+     # Print results related total months count
+    print(value)
+
+    # Print results related to net total amount of profit/losses
+    print(value_sum)
+
+         
+    # Add change in profit/loss data to its respective list    
+    for i in range(1, len(profit_loss)):
+        profit_change.append(float(profit_loss[i]) - float(profit_loss[i-1]))
+    
+    # Calculate the count for profit change list
+    print(str(len(profit_change)))
+    
+    # Calculate the total value for profit change list
+    profit_change_sum += float(profit_change[0])
+    print(profit_change_sum)
+
+    
+       
+       
+       
+       #def average(change_profit_loss):
+            #length = len(list(change_profit_loss)
+                  
+            #for average in change_profit_loss
+                #change_profit_loss += float(row[
+            #return length
+
+    #for i in range(1, len(profit_loss)):
+        #profit_change.append(float(profit_loss[i]) - float(profit_loss[i-1]))   
 
         # Add data to its range list
         
@@ -60,10 +87,10 @@ with open(input_file, 'r', newline="") as budget_data:
         #print(average_change)
             
     # Print results related total months count
-    print(value)
+    #print(value)
 
     # Print results related to net total amount of profit/losses
-    print(value_sum)
+    #print(value_sum)
 
     # Print results related to avg. change in profit/loss amount
     #print(average(change_profit_loss))
