@@ -13,15 +13,6 @@ candidate_Correy = []
 candidate_Li = []
 candidate_Tooley = []
 
-# Define initial values of store data lists
-#total_votes = 0
-
-# Defining conditionals for each candidates
-#Khan = True
-#Correy = True
-#Li = True
-#Tooley = True
-
 # Open and read csv
 with open(input_file, 'r', newline="") as election_data:
     csvreader = csv.reader(election_data, delimiter =',')
@@ -48,44 +39,53 @@ with open(input_file, 'r', newline="") as election_data:
             candidate_Tooley.append(row[2])
                 
     # Print total vote data for each respective candidate
-    print(len(candidate_Khan))
-    print(len(candidate_Correy))
-    print(len(candidate_Li))
-    print(len(candidate_Tooley))
+    #print(len(candidate_Khan))
+    #print(len(candidate_Correy))
+    #print(len(candidate_Li))
+    #print(len(candidate_Tooley))
 
     # Print total vote data for all candidates
-    total_votes = len(candidate_Khan) + len(candidate_Correy) + len(candidate_Li) + len(candidate_Tooley)
-    
+    total_votes = len(candidate_Khan) + len(candidate_Correy) + len(candidate_Li) + len(candidate_Tooley) 
     print(f"Total Votes: {(total_votes)}") 
 
-    # Print % of vote count for candidate Khan
+    # Print total vote and percentage of vote count for candidate Khan
     Khan_perc = len(candidate_Khan) / total_votes
-    print(f"Khan: {(Khan_perc)} {len(candidate_Khan)}")
+    print(f"Khan: {round(Khan_perc, 2)} {len(candidate_Khan)}")
 
-    # Print % of vote count for candidate Correy
+    # Print total vote and percentageof vote count for candidate Correy
     Correy_perc = len(candidate_Correy) / total_votes
-    print(Correy_perc) 
+    print(f"Correy: {round(Correy_perc, 2)} {len(candidate_Correy)}")
 
-    # Print % of vote count for candidate Li
+    # Print total vote and percentage of vote count for candidate Li
     Li_perc = len(candidate_Li) / total_votes
-    print(Li_perc) 
+    print(f"Li: {round(Li_perc, 2)} {len(candidate_Li)}") 
 
-    # Print % of vote count for candidate O'Tooley
+    # Print total vote and percentage of vote count for candidate O'Tooley
     Tooley_perc = len(candidate_Tooley) / total_votes
-    print(Tooley_perc)
+    print(f"O'Tooley: {round(Tooley_perc, 2)} {len(candidate_Tooley)}")
 
     # Print winner
     print(f"Winner: Khan") 
 
-    
+    # Export text file 
     output_file = os.path.join('../Resources/','election_output.csv')
-
     with open(output_file, 'w') as election_output_file:
         
-        # Write the first row (column headers)
+        # Write the results into the text file
         csvwriter = csv.writer(election_output_file, delimiter=',')
-        csvwriter.writerow([(f"Khan: {(Khan_perc)} {len(candidate_Khan)}")])
+        csvwriter.writerow([f"Election Results"])
+        csvwriter.writerow([f"----------------------------------"])
         csvwriter.writerow([(f"Total Votes: {(total_votes)}")])
+        csvwriter.writerow([f"----------------------------------"])
+        csvwriter.writerow([(f"Khan: {round(Khan_perc, 2)} {len(candidate_Khan)}")])
+        csvwriter.writerow([(f"Correy: {round(Correy_perc, 2)} {len(candidate_Correy)}")])
+        csvwriter.writerow([(f"Li: {round(Li_perc, 2)} {len(candidate_Li)}")])
+        csvwriter.writerow([(f"O'Tooley: {round(Tooley_perc, 2)} {len(candidate_Tooley)}")])
+        csvwriter.writerow([f"----------------------------------"])
+        csvwriter.writerow([f"Winner: Khan"])
+        csvwriter.writerow([f"----------------------------------"])
+
+        
 
 
 

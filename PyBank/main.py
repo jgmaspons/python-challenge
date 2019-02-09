@@ -62,58 +62,22 @@ with open(input_file, 'r', newline="") as budget_data:
 
     average = profit_change_sum / len(profit_change)
        
-    print(f"Average Change: ${(average)}") 
+    print(f"Average Change: ${round(average, 2)}") 
 
     print(f"Greatest Increase in Profits: {(dateRec[25])} ${max(profit_change)}")
 
     print(f"Greatest Decrease in Profits: {(dateRec[44])} ${min(profit_change)}")
 
-
-    # print(f"You make {daily_wage} per day")
-
-       
-       #def average(change_profit_loss):
-            #length = len(list(change_profit_loss)
-                  
-            #for average in change_profit_loss
-                #change_profit_loss += float(row[
-            #return length
-
-    #for i in range(1, len(profit_loss)):
-        #profit_change.append(float(profit_loss[i]) - float(profit_loss[i-1]))   
-
-        # Add data to its range list
+# Export text file 
+    output_file = os.path.join('../Resources/','analysis_output.csv')
+    with open(output_file, 'w') as analysis_output_file:
         
-        #def average(change_profit_loss):
-            #length = len(list(change_profit_loss)
-                  
-            #for average in change_profit_loss
-                #change_profit_loss += float(row[
-            #return length
-
-
-        #avg_change_profit_loss = 
-        #print(change_profit_loss)
-        #average_change = sum(change_profit_loss) / value
-        #print(average_change)
-            
-    # Print results related total months count
-    #print(value)
-
-    # Print results related to net total amount of profit/losses
-    #print(value_sum)
-
-    # Print results related to avg. change in profit/loss amount
-    #print(average(change_profit_loss))
-    #print(change_profit_loss)
-
-    # The greatest increase in profits (date and amount) over the entire period
-
-
-    # The greatest decrease in losses (date and amount) over the entire period
-
-
-        #print (max(change_profit_loss))
-        #print (min(change_profit_loss))
-
-             
+        # Write the results into the text file
+        csvwriter = csv.writer(analysis_output_file, delimiter=',')
+        csvwriter.writerow([f"Financial Analysis"])
+        csvwriter.writerow([f"----------------------------------"])
+        csvwriter.writerow([(f"Total Months: {(value)}")])
+        csvwriter.writerow([(f"Total: ${(value_sum)}")])
+        csvwriter.writerow([(f"Average Change: ${round(average, 2)}")])    
+        csvwriter.writerow([(f"Greatest Increase in Profits: {(dateRec[25])} ${max(profit_change)}")])
+        csvwriter.writerow([(f"Greatest Decrease in Profits: {(dateRec[44])} ${min(profit_change)}")])
