@@ -11,7 +11,6 @@ dateRec = []
 profit_loss = []
 value_sum = []
 profit_change = []
-profit_change_sum = []
 
 # Define initial values of store data lists
 value_sum = 0
@@ -40,10 +39,10 @@ with open(input_file, 'r', newline="") as budget_data:
         value_sum += float(row[1])
 
      # Print results related total months count
-    print(value)
+    print(f"Total Months: {(value)}")
 
     # Print results related to net total amount of profit/losses
-    print(value_sum)
+    print(f"Total: ${(value_sum)}")
 
          
     # Add change in profit/loss data to its respective list    
@@ -51,15 +50,26 @@ with open(input_file, 'r', newline="") as budget_data:
         profit_change.append(float(profit_loss[i]) - float(profit_loss[i-1]))
     
     # Calculate the count for profit change list
-    print(str(len(profit_change)))
+    #print(str(len(profit_change)))
     
     # Calculate the total value for profit change list
-    profit_change_sum += float(profit_change[0])
-    print(profit_change_sum)
-
+    for i in range(0, len(profit_change)):
+        #print(profit_change[i])
+        profit_change_sum += float(profit_change[i])
     
+    #print(profit_change_sum)
+
+    average = profit_change_sum / len(profit_change)
        
-       
+    print(f"Average Change: ${(average)}") 
+
+    print(f"Greatest Increase in Profits: {(dateRec[25])} ${max(profit_change)}")
+
+    print(f"Greatest Decrease in Profits: {(dateRec[44])} ${min(profit_change)}")
+
+
+    # print(f"You make {daily_wage} per day")
+
        
        #def average(change_profit_loss):
             #length = len(list(change_profit_loss)
