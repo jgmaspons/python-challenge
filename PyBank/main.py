@@ -20,7 +20,7 @@ profit_change_sum = 0
 with open(input_file, 'r', newline="") as budget_data:
     csvreader = csv.reader(budget_data, delimiter =',')
 
-# Read the header row first 
+# Skip the header row
     csv_header = next(csvreader)
              
     # Iterate row-by-row through the dataset    
@@ -54,6 +54,7 @@ with open(input_file, 'r', newline="") as budget_data:
     
     # Calculate the total value for profit change list
     for i in range(0, len(profit_change)):
+        
         #print(profit_change[i])
         profit_change_sum += float(profit_change[i])
     
