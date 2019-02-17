@@ -1,0 +1,1096 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# # Heroes Of Pymoli Data Analysis
+# 
+# * Of the 576 active players, the vast majority are male (84%). There also exists, a smaller, but notable proportion of female players (14%).
+# 
+# * Our peak age demographic falls between 20-24 (44.8%) with secondary groups falling between 15-19 (18.6%) and 25-29 (13.4%).  
+# 
+# * Total revenues were fairly evenly distributed among active players, as the top 30 spenders (5.2%) accounted for just 13.7% of total revenues generating a 2.9 purchase count average (vs. 1.4 for all group segments).
+# 
+# * The top 30 (16.4%) most popular and profitable purchase game items represented a notable minority (28.6% in counts and 34.2% in dollars), yet even the top purchase item accounted for less 2.5% of revenue dollars or total counts.
+# 
+# * Female active players spent on average 9.8% more than their counterparts (male active players) as a result of both a higher purchase count and a higher purchase price per active player.
+# 
+# -----
+
+# ### Note
+# * Instructions have been included for each segment. You do not have to follow them exactly, but they are included to help you think through the steps.
+
+# In[505]:
+
+
+# Dependencies and Setup
+import pandas as pd
+import numpy as np
+
+# File to Load (Remember to Change These)
+file_to_load = "Resources/purchase_data.csv"
+
+# Read Purchasing File and store into Pandas data frame
+purchase_data = pd.read_csv(file_to_load)
+
+
+# ## Player Count
+
+# * Display the total number of players
+# 
+
+# In[506]:
+
+
+purchase_data.head(20)
+
+
+# In[507]:
+
+
+purchase_data.describe()
+
+
+# In[508]:
+
+
+purchase_data.dtypes
+
+
+# In[509]:
+
+
+purchase_data.count()
+
+
+# In[510]:
+
+
+purchase_data["SN"].value_counts()
+
+
+# In[511]:
+
+
+Total_players = len(purchase_data["SN"].unique()) 
+Total_players
+
+
+# In[512]:
+
+
+Summary_total_players = pd.DataFrame({"Total Players": [Total_players]})
+Summary_total_players
+
+
+# ## Purchasing Analysis (Total)
+
+# * Run basic calculations to obtain number of unique items, average price, etc.
+# 
+# 
+# * Create a summary data frame to hold the results
+# 
+# 
+# * Optional: give the displayed data cleaner formatting
+# 
+# 
+# * Display the summary data frame
+# 
+
+# In[513]:
+
+
+purchase_data["Item ID"].describe()
+
+
+# In[514]:
+
+
+purchase_data["Item ID"].value_counts()
+
+
+# In[515]:
+
+
+Unique_items = len(purchase_data["Item ID"].unique())
+Unique_items
+
+
+# In[516]:
+
+
+Total_revenue = purchase_data["Price"].sum()
+Total_revenue
+
+
+# In[517]:
+
+
+Number_of_purchases = len(purchase_data)
+Number_of_purchases
+
+
+# In[518]:
+
+
+Average_price = Total_revenue / Number_of_purchases
+Average_price
+
+
+# In[519]:
+
+
+Summary_purchasing = pd.DataFrame({
+    "Number of Unique Items": [Unique_items], 
+    "Average Price": [Average_price],
+    "Number of Purchases": [Number_of_purchases],
+    "Total Revenue": [Total_revenue]
+})
+                        
+Summary_purchasing
+
+
+# In[520]:
+
+
+Summary_purchasing["Average Price"] = Summary_purchasing["Average Price"].map("${:.2f}".format)
+Summary_purchasing["Total Revenue"] = Summary_purchasing["Total Revenue"].map("${:,.2f}".format)
+
+Summary_purchasing
+
+
+# ## Gender Demographics
+
+# * Percentage and Count of Male Players
+# 
+# 
+# * Percentage and Count of Female Players
+# 
+# 
+# * Percentage and Count of Other / Non-Disclosed
+# 
+# 
+# 
+
+# In[521]:
+
+
+Males_data=purchase_data.loc[purchase_data["Gender"] == "Male",:]
+Males_data.head()
+    
+    
+
+
+# In[522]:
+
+
+Males_only_count = Males_data["SN"].value_counts()
+Males_only_count.head()
+
+
+# In[523]:
+
+
+Males_only_total = len(Males_data["SN"].unique())
+Males_only_total
+
+
+# In[524]:
+
+
+Females_data=purchase_data.loc[purchase_data["Gender"] == "Female",:]
+Females_data.head()
+
+
+# In[525]:
+
+
+Females_only_count = Females_data["SN"].value_counts()
+Females_only_count.head()
+
+
+# In[526]:
+
+
+Females_only_total = len(Females_data["SN"].unique())
+Females_only_total
+
+
+# In[527]:
+
+
+Undisclosed_data=purchase_data.loc[purchase_data["Gender"] == "Other / Non-Disclosed",:]
+Undisclosed_data.head()
+
+
+# In[528]:
+
+
+Undisclosed_only_count = Undisclosed_data["SN"].value_counts()
+Undisclosed_only_count
+
+
+# In[529]:
+
+
+Undisclosed_only_total = len(Undisclosed_data["SN"].unique())
+Undisclosed_only_total
+
+
+# In[530]:
+
+
+Males_Perc = Males_only_total / Total_players
+Males_Perc
+
+
+# In[531]:
+
+
+Females_Perc = Females_only_total / Total_players
+Females_Perc
+
+
+# In[532]:
+
+
+Undisclosed_Perc = Undisclosed_only_total / Total_players
+Undisclosed_Perc
+
+
+# In[533]:
+
+
+Summary_gender = pd.DataFrame({
+    "Gender": ["Male", "Female", "Other/Non-disclosed"],
+    "Total Count": [Males_only_total, Females_only_total, Undisclosed_only_total],
+    "Percentage of Players": [Males_Perc*100, Females_Perc*100, Undisclosed_Perc*100]
+    
+})
+                        
+Summary_gender
+
+
+# In[534]:
+
+
+Summary_gender_index = Summary_gender.set_index("Gender")
+Summary_gender_index
+
+
+# In[535]:
+
+
+Summary_gender_index["Percentage of Players"] = Summary_gender_index["Percentage of Players"].map("{:.2f}".format)
+Summary_gender_index
+
+
+# 
+# ## Purchasing Analysis (Gender)
+
+# * Run basic calculations to obtain purchase count, avg. purchase price, avg. purchase total per person etc. by gender
+# 
+# 
+# 
+# 
+# * Create a summary data frame to hold the results
+# 
+# 
+# * Optional: give the displayed data cleaner formatting
+# 
+# 
+# * Display the summary data frame
+
+# In[536]:
+
+
+grouped_count_data=purchase_data.groupby(["Gender"])
+grouped_count_data.count()
+
+
+# In[537]:
+
+
+grouped_sum_data=purchase_data.groupby(["Gender"])
+grouped_count_data.sum()
+
+
+# In[538]:
+
+
+only_males=purchase_data.loc[purchase_data["Gender"]=="Male",:]
+only_males.head()
+
+
+# In[539]:
+
+
+only_males_purchase_count = only_males["Purchase ID"].count()
+only_males_purchase_count
+
+
+# In[540]:
+
+
+only_males_price_sum = only_males["Price"].sum()
+only_males_price_sum
+
+
+# In[541]:
+
+
+Males_avg_purchase_price = only_males_price_sum / only_males_purchase_count
+Males_avg_purchase_price
+
+
+# In[542]:
+
+
+Males_avg_total_purchase_price =  only_males_price_sum / Males_only_total
+Males_avg_total_purchase_price
+
+
+# In[543]:
+
+
+only_females=purchase_data.loc[purchase_data["Gender"]=="Female",:]
+only_females.head()
+
+
+# In[544]:
+
+
+only_females_purchase_count = only_females["Purchase ID"].count()
+only_females_purchase_count
+
+
+# In[545]:
+
+
+only_females_price_sum = only_females["Price"].sum()
+only_females_price_sum
+
+
+# In[546]:
+
+
+Females_avg_purchase_price = only_females_price_sum / only_females_purchase_count
+Females_avg_purchase_price
+
+
+# In[547]:
+
+
+Females_avg_total_purchase_price =  only_females_price_sum / Females_only_total
+Females_avg_total_purchase_price
+
+
+# In[548]:
+
+
+only_other=purchase_data.loc[purchase_data["Gender"]=="Other / Non-Disclosed",:]
+only_other.head()
+
+
+# In[549]:
+
+
+only_other_purchase_count = only_other["Purchase ID"].count()
+only_other_purchase_count
+
+
+# In[550]:
+
+
+only_other_price_sum = only_other["Price"].sum()
+only_other_price_sum
+
+
+# In[551]:
+
+
+Other_avg_purchase_price = only_other_price_sum / only_other_purchase_count
+Females_avg_purchase_price
+
+
+# In[552]:
+
+
+Other_avg_total_purchase_price = only_other_price_sum / Undisclosed_only_total
+Other_avg_total_purchase_price
+
+
+# In[553]:
+
+
+Summary_purchasing = pd.DataFrame({
+    "Gender": ["Female", "Male", "Other/Non-disclosed"],
+    "Purchase Count": [only_females_purchase_count , only_males_purchase_count , only_other_purchase_count],
+    "Average Purchase Value": [Females_avg_purchase_price, Males_avg_purchase_price, Other_avg_purchase_price],
+    "Total Purchase Value": [only_females_price_sum, only_males_price_sum, only_other_price_sum],
+    "Avg Total Purchase per Person": [Females_avg_total_purchase_price, Males_avg_total_purchase_price, Other_avg_total_purchase_price]
+})
+                        
+Summary_purchasing
+
+
+# In[554]:
+
+
+Summary_purchasing_index = Summary_purchasing.set_index("Gender")
+Summary_purchasing_index
+
+
+# In[555]:
+
+
+Summary_purchasing_index["Average Purchase Value"] = Summary_purchasing_index["Average Purchase Value"].map("${:.2f}".format)
+Summary_purchasing_index["Total Purchase Value"] = Summary_purchasing_index["Total Purchase Value"].map("${:,.2f}".format)
+Summary_purchasing_index["Avg Total Purchase per Person"] = Summary_purchasing_index["Avg Total Purchase per Person"].map("${:.2f}".format)
+Summary_purchasing_index
+
+
+# ## Age Demographics
+
+# * Establish bins for ages
+# 
+# 
+# * Categorize the existing players using the age bins. Hint: use pd.cut()
+# 
+# 
+# * Calculate the numbers and percentages by age group
+# 
+# 
+# * Create a summary data frame to hold the results
+# 
+# 
+# * Optional: round the percentage column to two decimal points
+# 
+# 
+# * Display Age Demographics Table
+# 
+
+# In[556]:
+
+
+print(purchase_data["Age"].max())
+print(purchase_data["Age"].min())
+print(purchase_data["Age"].count())
+
+
+# In[557]:
+
+
+demo_reduced_purchase_data = purchase_data[["SN", "Age"]]
+demo_reduced_purchase_data.count()
+
+
+# In[558]:
+
+
+grouped_demo_reduced_purchase_data = demo_reduced_purchase_data.groupby(["SN"])
+
+grouped_purchase_data = pd.DataFrame(
+    grouped_demo_reduced_purchase_data["Age"].max())
+
+grouped_purchase_data.head()
+
+
+# In[559]:
+
+
+bins = [0, 9.99, 14, 19, 24, 29,
+        34, 39, 49]
+
+group_labels = ["<10","10-14","15-19","20-24","25-29",
+                "30-34","35-39","40+"]
+
+pd.cut(grouped_purchase_data["Age"], bins, labels=group_labels).head()
+
+
+# In[560]:
+
+
+grouped_purchase_data["Bin Group"] = pd.cut(grouped_purchase_data["Age"], bins, labels=group_labels)
+grouped_purchase_data.head()
+
+
+# In[561]:
+
+
+df_grouped_purchase_data = pd.DataFrame(
+    grouped_purchase_data["Bin Group"].value_counts())
+df_grouped_purchase_data
+
+
+# In[562]:
+
+
+total_age_10=df_grouped_purchase_data.loc[0,"Bin Group"]
+total_age_10
+
+
+# In[563]:
+
+
+total_age_14=df_grouped_purchase_data.loc[1,"Bin Group"]
+total_age_14
+
+
+# In[564]:
+
+
+total_age_19=df_grouped_purchase_data.loc[2,"Bin Group"]
+total_age_19
+
+
+# In[565]:
+
+
+total_age_24=df_grouped_purchase_data.loc[3,"Bin Group"]
+total_age_24
+
+
+# In[566]:
+
+
+total_age_29=df_grouped_purchase_data.loc[4,"Bin Group"]
+total_age_29
+
+
+# In[567]:
+
+
+total_age_34=df_grouped_purchase_data.loc[5,"Bin Group"]
+total_age_34
+
+
+# In[568]:
+
+
+total_age_39=df_grouped_purchase_data.loc[6,"Bin Group"]
+total_age_39
+
+
+# In[569]:
+
+
+total_age_40=df_grouped_purchase_data.loc[7,"Bin Group"]
+total_age_40
+
+
+# In[570]:
+
+
+total_per_age_10 = total_age_10 / Total_players
+total_per_age_10
+
+
+# In[571]:
+
+
+total_per_age_14 = total_age_14 / Total_players
+total_per_age_14
+
+
+# In[572]:
+
+
+total_per_age_19 = total_age_19 / Total_players
+total_per_age_19
+
+
+# In[573]:
+
+
+total_per_age_24 = total_age_24 / Total_players
+total_per_age_24
+
+
+# In[574]:
+
+
+total_per_age_29 = total_age_29 / Total_players
+total_per_age_29
+
+
+# In[575]:
+
+
+total_per_age_34 = total_age_34 / Total_players
+total_per_age_34
+
+
+# In[576]:
+
+
+total_per_age_39 = total_age_39 / Total_players
+total_per_age_39
+
+
+# In[577]:
+
+
+total_per_age_40 = total_age_40 / Total_players
+total_per_age_40
+
+
+# In[578]:
+
+
+Age_demo = pd.DataFrame({
+    "Age Range": ["<10", "10-14", "15-19", "20-24", "25-29", "30-34", "35-39", "40+"],
+    "Total Count": [total_age_10 , total_age_14 , total_age_19 , total_age_24 , total_age_29 , total_age_34 , total_age_39 , total_age_40],
+    "Percentage of Players": [total_per_age_10*100 , total_per_age_14*100 , total_per_age_19*100 , total_per_age_24*100 , total_per_age_29*100 , total_per_age_34*100 , total_per_age_39*100 , total_per_age_40*100]
+
+})
+                        
+Age_demo
+
+
+# In[579]:
+
+
+Age_demo_index = Age_demo.set_index("Age Range")
+Age_demo_index
+
+
+# In[580]:
+
+
+Age_demo_index["Percentage of Players"] = Age_demo_index["Percentage of Players"].map("{:.2f}".format)
+Age_demo_index
+
+
+# ## Purchasing Analysis (Age)
+
+# * Bin the purchase_data data frame by age
+# 
+# 
+# * Run basic calculations to obtain purchase count, avg. purchase price, avg. purchase total per person etc. in the table below
+# 
+# 
+# * Create a summary data frame to hold the results
+# 
+# 
+# * Optional: give the displayed data cleaner formatting
+# 
+# 
+# * Display the summary data frame
+
+# In[581]:
+
+
+age_reduced_purchase_data = purchase_data[["SN", "Age", "Price"]]
+age_reduced_purchase_data.head()
+
+
+# In[582]:
+
+
+bins = [0, 9.99, 14, 19, 24, 29,
+        34, 39, 49]
+
+group_labels = ["<10","10-14","15-19","20-24","25-29",
+                "30-34","35-39","40+"]
+
+pd.cut(age_reduced_purchase_data["Age"], bins, labels=group_labels).head()
+
+
+# In[583]:
+
+
+age_reduced_purchase_data["Bin Group"] = pd.cut(age_reduced_purchase_data["Age"], bins, labels=group_labels)
+age_reduced_purchase_data.head()
+
+
+# In[584]:
+
+
+grouped_age_reduced_purchase_data = age_reduced_purchase_data.groupby(["Bin Group"])
+
+df_grouped_age_reduced_purchase_data = pd.DataFrame(
+      grouped_age_reduced_purchase_data["SN"].count())
+
+df_grouped_age_reduced_purchase_data
+
+
+# In[585]:
+
+
+total_count_10=df_grouped_age_reduced_purchase_data.loc[0, "SN"]
+total_count_10
+
+
+# In[586]:
+
+
+total_count_14=df_grouped_age_reduced_purchase_data.loc[1, "SN"]
+total_count_14
+
+
+# In[587]:
+
+
+total_count_19=df_grouped_age_reduced_purchase_data.loc[2, "SN"]
+total_count_19
+
+
+# In[588]:
+
+
+total_count_24=df_grouped_age_reduced_purchase_data.loc[3, "SN"]
+total_count_24
+
+
+# In[589]:
+
+
+total_count_29=df_grouped_age_reduced_purchase_data.loc[4, "SN"]
+total_count_29
+
+
+# In[590]:
+
+
+total_count_34=df_grouped_age_reduced_purchase_data.loc[5, "SN"]
+total_count_34
+
+
+# In[591]:
+
+
+total_count_39=df_grouped_age_reduced_purchase_data.loc[6, "SN"]
+total_count_39
+
+
+# In[592]:
+
+
+total_count_40=df_grouped_age_reduced_purchase_data.loc[7, "SN"]
+total_count_40
+
+
+# In[593]:
+
+
+df_grouped_age_reduced_purchase_data = pd.DataFrame(
+      grouped_age_reduced_purchase_data["Price"].sum())
+
+df_grouped_age_reduced_purchase_data
+
+
+# In[594]:
+
+
+total_purchase_10=df_grouped_age_reduced_purchase_data.loc[0, "Price"]
+total_purchase_10
+
+
+# In[595]:
+
+
+total_purchase_14=df_grouped_age_reduced_purchase_data.loc[1, "Price"]
+total_purchase_14
+
+
+# In[596]:
+
+
+total_purchase_19=df_grouped_age_reduced_purchase_data.loc[2, "Price"]
+total_purchase_19
+
+
+# In[597]:
+
+
+total_purchase_24=df_grouped_age_reduced_purchase_data.loc[3, "Price"]
+total_purchase_24
+
+
+# In[598]:
+
+
+total_purchase_29=df_grouped_age_reduced_purchase_data.loc[4, "Price"]
+total_purchase_29
+
+
+# In[599]:
+
+
+total_purchase_34=df_grouped_age_reduced_purchase_data.loc[5, "Price"]
+total_purchase_34
+
+
+# In[600]:
+
+
+total_purchase_39=df_grouped_age_reduced_purchase_data.loc[6, "Price"]
+total_purchase_39
+
+
+# In[601]:
+
+
+total_purchase_40=df_grouped_age_reduced_purchase_data.loc[7, "Price"]
+total_purchase_40
+
+
+# In[602]:
+
+
+Age_purchasing = pd.DataFrame({
+    "Age Bucket": ["10", "10-14", "15-19", "20-24", "25-29", "30-34", "35-39", "40+"],
+    "Purchase Count": [total_count_10 , total_count_14 , total_count_19 , total_count_24 , total_count_29 , total_count_34 , total_count_39 , total_count_40],
+    "Average Purchase Price": [total_purchase_10/total_count_10 , total_purchase_14/total_count_14 , total_purchase_19/total_count_19 , total_purchase_24/total_count_24 , total_purchase_29/total_count_29 , total_purchase_34/total_count_34 , total_purchase_39/total_count_39 ,  total_purchase_40/total_count_40],
+    "Total Purchase Value": [total_purchase_10 , total_purchase_14 , total_purchase_19 , total_purchase_24 , total_purchase_29 , total_purchase_34 , total_purchase_39 , total_purchase_40],
+    "Avg Total Purchase per Person": [total_purchase_10/total_age_10 , total_purchase_14/total_age_14 , total_purchase_19/total_age_19 , total_purchase_24/total_age_24 , total_purchase_29/total_age_29 , total_purchase_34/total_age_34 , total_purchase_39/total_age_39 , total_purchase_40/total_age_40]
+})
+                        
+Age_purchasing
+
+
+# In[603]:
+
+
+Age_purchasing_index = Age_purchasing.set_index("Age Bucket")
+Age_purchasing_index
+
+
+# In[604]:
+
+
+Age_purchasing_index["Average Purchase Price"] = Age_purchasing_index["Average Purchase Price"].map("${:.2f}".format)
+Age_purchasing_index["Total Purchase Value"] = Age_purchasing_index["Total Purchase Value"].map("${:,.2f}".format)
+Age_purchasing_index["Avg Total Purchase per Person"] = Age_purchasing_index["Avg Total Purchase per Person"].map("${:.2f}".format)
+Age_purchasing_index
+
+
+# ## Top Spenders
+
+# * Run basic calculations to obtain the results in the table below
+# 
+# 
+# * Create a summary data frame to hold the results
+# 
+# 
+# * Sort the total purchase value column in descending order
+# 
+# 
+# * Optional: give the displayed data cleaner formatting
+# 
+# 
+# * Display a preview of the summary data frame
+# 
+# 
+
+# In[605]:
+
+
+reduced_purchase_data = purchase_data[["SN", "Price"]]
+reduced_purchase_data.head()
+
+
+# In[606]:
+
+
+grouped_spender_purchase_data=reduced_purchase_data.groupby(["SN"]) 
+
+df_grouped_spender_purchase_data = pd.DataFrame(
+    grouped_spender_purchase_data["Price"].sum())
+
+df_grouped_spender_purchase_data.head()
+
+   
+
+
+# In[607]:
+
+
+unique_purchase_data=pd.DataFrame(reduced_purchase_data["SN"].value_counts())
+unique_purchase_data.head()
+
+
+# In[608]:
+
+
+concat_spender_table = pd.concat([df_grouped_spender_purchase_data, unique_purchase_data], axis=1)
+concat_spender_table
+
+
+# In[609]:
+
+
+unique_purchase_data["SN"] = concat_spender_table.SN.astype(float)
+concat_spender_table.dtypes
+
+
+# In[610]:
+
+
+sorted_concat_spender_table = concat_spender_table.sort_values("Price", ascending=False)
+sorted_concat_spender_table.head()
+
+
+# In[611]:
+
+
+sorted_concat_spender_table.dtypes
+
+
+# In[612]:
+
+
+Add_avg_purchase_value = sorted_concat_spender_table["Price"] / sorted_concat_spender_table["SN"]
+
+sorted_concat_spender_table["Average Purchase Price"] = Add_avg_purchase_value
+sorted_concat_spender_table.head()
+
+
+# In[613]:
+
+
+reorganized_concat_spender_table = sorted_concat_spender_table[["SN","Average Purchase Price","Price"]]
+reorganized_concat_spender_table.head()
+
+
+# In[631]:
+
+
+renamed_concat_spender_table = reorganized_concat_spender_table.rename(columns={"SN":"Purchase Count","Price":"Total Purchase Value"})
+renamed_concat_spender_table
+                            
+
+
+# In[615]:
+
+
+renamed_concat_spender_table["Average Purchase Price"] = renamed_concat_spender_table["Average Purchase Price"].map("${:.2f}".format)
+renamed_concat_spender_table["Total Purchase Value"] = renamed_concat_spender_table["Total Purchase Value"].map("${:.2f}".format)
+renamed_concat_spender_table
+
+
+# ## Most Popular Items
+
+# * Retrieve the Item ID, Item Name, and Item Price columns
+# 
+# 
+# * Group by Item ID and Item Name. Perform calculations to obtain purchase count, item price, and total purchase value
+# 
+# 
+# * Create a summary data frame to hold the results
+# 
+# 
+# * Sort the purchase count column in descending order
+# 
+# 
+# * Optional: give the displayed data cleaner formatting
+# 
+# 
+# * Display a preview of the summary data frame
+# 
+# 
+
+# In[616]:
+
+
+popular_reduced_purchase_data = purchase_data[["Item ID", "Item Name", "Price"]]
+popular_reduced_purchase_data.head()
+
+
+# In[617]:
+
+
+grouped_popular_data = popular_reduced_purchase_data.groupby(["Item Name"])
+
+grouped_popular_data=pd.DataFrame(grouped_popular_data["Item ID"].value_counts())
+grouped_popular_data=grouped_popular_data.rename(columns={"Item ID":"Purchase Count"})
+
+grouped_popular_data.head()
+
+
+# In[618]:
+
+
+grouped2_popular_data = popular_reduced_purchase_data.groupby(["Item Name"])
+
+sum_popular_data=pd.DataFrame(grouped2_popular_data["Price", "Item ID"].max())
+sum_popular_data.head()
+
+
+# In[619]:
+
+
+merged_popular_df = pd.merge(grouped_popular_data, sum_popular_data, on="Item Name")
+merged_popular_df.head()
+
+
+# In[620]:
+
+
+merged_popular_df=merged_popular_df.rename(columns={"Price":"Item Price"})
+
+
+# In[621]:
+
+
+total_purchase_value = merged_popular_df["Purchase Count"] * merged_popular_df["Item Price"]
+merged_popular_df["Total Purchase Value"] = total_purchase_value
+merged_popular_df.head()
+
+
+# In[622]:
+
+
+organized_merged_popular_df = merged_popular_df[["Item ID", "Purchase Count", "Item Price", "Total Purchase Value"]]
+organized_merged_popular_df.head()
+
+
+# In[623]:
+
+
+organized_merged_popular_df = organized_merged_popular_df.sort_values(["Purchase Count", "Total Purchase Value"],ascending=False)
+organized_merged_popular_df.head()
+
+
+# In[624]:
+
+
+organized_merged_popular_df.dtypes
+
+
+# In[625]:
+
+
+organized_merged_popular_df["Total Purchase Value"] = organized_merged_popular_df["Total Purchase Value"].map("${:.2f}".format)
+organized_merged_popular_df["Item Price"] = organized_merged_popular_df["Item Price"].map("${:.2f}".format)
+organized_merged_popular_df
+
+
+# ## Most Profitable Items
+
+# In[626]:
+
+
+merged_popular_df.head()
+
+
+# In[627]:
+
+
+organized_merged_popular_df = merged_popular_df[["Item ID", "Purchase Count", "Item Price", "Total Purchase Value"]]
+organized_merged_popular_df.head()
+
+
+# In[628]:
+
+
+organized_merged_popular_df = organized_merged_popular_df.sort_values(["Total Purchase Value"],ascending=False)
+organized_merged_popular_df.head(50)
+
+
+# In[125]:
+
+
+organized_merged_popular_df["Total Purchase Value"] = organized_merged_popular_df["Total Purchase Value"].map("${:.2f}".format)
+organized_merged_popular_df["Item Price"] = organized_merged_popular_df["Item Price"].map("${:.2f}".format)
+organized_merged_popular_df
+
