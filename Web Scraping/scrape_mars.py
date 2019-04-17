@@ -10,17 +10,19 @@ def init_browser():
     #executable_path = {"executable_path": "chromedriver"}
     #return Browser("chrome", **executable_path, headless=False)
     executable_path = {'executable_path': 'chromedriver'}
-    return Browser('chrome', headless=True, **exec_path)
+    return Browser('chrome', headless=True, **executable_path)
 
 ## NASA MARS NEWS ##
 
 mars_data = {}
 
 def scrape_mars_data_news():
+    browser = init_browser()
+
     try:
 
 # Initialize browser
-        browser = init_browser()
+        #browser = init_browser()
 
 # URL of page to be scraped
         url = 'https://mars.nasa.gov/news'
@@ -49,12 +51,16 @@ def scrape_mars_data_news():
 
 ## JPL MARS SPACE IMAGES ##
 
+mars_images = {}
+
 def scrape_mars_images():
+
+# Initialize browser
+    browser = init_browser()
 
     try:
 
-        # Initialize browser
-        browser = init_browser()
+    
 
 # https://splinter.readthedocs.io/en/latest/drivers/chrome.html
         #get_ipython().system('which chromedriver')
@@ -77,9 +83,9 @@ def scrape_mars_images():
         feature_image_url
 
 # Entry retrieve data into dictionary
-        mars_data['feature_image_url'] = feature_image_url
+        mars_images['feature_image_url'] = feature_image_url
 
-        return mars_data
+        return mars_images
     
     finally: 
         browser.quit()
@@ -87,31 +93,33 @@ def scrape_mars_images():
 
 ## MARS WEATHER ##
 
+mars_weather = {}
+
 def scrape_mars_weather():
 
-    try:
-
 # Initialize browser
-        browser = init_browser()
+    browser = init_browser()
+
+    try:
 
 # URL of page to be scraped
         weather_url = 'https://twitter.com/marswxreport?lang=en'
         browser.visit(weather_url)
 
 # Retrieve page with the requests module
-        response = requests.get(url)
+        response = requests.get(weather_url)
 
 # Create BeautifulSoup object; parse with 'html.parser'
         soup = bs(response.text, 'html.parser')
 
         mars_weather_content = soup.find(class_='TweetTextSize TweetTextSize--normal js-tweet-text tweet-text')
 
-        mars_weather = mars_weather_content.text.strip()
+        mars_weather_result = mars_weather_content.text.strip()
     
 # Entry retrieve data into dictionary
-        mars_data['mars_weather'] = mars_weather
-
-        return mars_data
+        mars_weather['mars_weather_result'] = mars_weather_result
+       
+        return mars_weather
     
     finally: 
         browser.quit()
@@ -229,4 +237,21 @@ def scrape_mars_hemispheres():
     finally:
         browser.quit()
 
+
+
+#def main()
+
+mars_data = scrape_mars_data_news()
+mars_images = scrape_mars_images()
+mars_weather = scrape_mars_weather()
+
+
+
 print(mars_data)
+print(mars_images)
+print(scrape_mars_weather)
+
+#if __name__ == "__main__":
+#    print("blah")
+
+## NEED TO CREATE A NEW VARIABLE FOR EACH DEFINITION
