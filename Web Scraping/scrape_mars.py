@@ -2,7 +2,7 @@
 from bs4 import BeautifulSoup as bs
 import requests
 from splinter import Browser
-#import pandas as pd
+import pandas as pd
 
 
 def init_browser():
@@ -11,6 +11,8 @@ def init_browser():
     #return Browser("chrome", **executable_path, headless=False)
     executable_path = {'executable_path': 'chromedriver'}
     return Browser('chrome', headless=True, **executable_path)
+
+
 
 ## NASA MARS NEWS ##
 
@@ -49,6 +51,8 @@ def scrape_mars_data_news():
     finally:
         browser.quit()
 
+
+
 ## JPL MARS SPACE IMAGES ##
 
 mars_images = {}
@@ -59,8 +63,6 @@ def scrape_mars_images():
     browser = init_browser()
 
     try:
-
-    
 
 # https://splinter.readthedocs.io/en/latest/drivers/chrome.html
         #get_ipython().system('which chromedriver')
@@ -89,6 +91,7 @@ def scrape_mars_images():
     
     finally: 
         browser.quit()
+
 
 
 ## MARS WEATHER ##
@@ -125,46 +128,59 @@ def scrape_mars_weather():
         browser.quit()
 
 
+
 ## MARS FACTS ##
+
+mars_facts = {}
 
 def scrape_mars_facts():
 
+    # Initialize browser
+    browser = init_browser()
+
+    try:
+
 # URL of page to be scraped
-    facts_url = 'https://space-facts.com/mars/'
+        facts_url = 'https://space-facts.com/mars/'
 
 
-    tables = pd.read_html(facts_url)
+        tables = pd.read_html(facts_url)
 
-    df = tables[0]
-    df.columns = ['Planet Facts','Results']
+        df = tables[0]
+        df.columns = ['Planet Facts','Results']
 
-    df.set_index('Planet Facts', inplace=True)
+        df.set_index('Planet Facts', inplace=True)
 
-    html_table = df.to_html()
-    html_table_string = html_table.replace('\n', '')
+        html_table = df.to_html()
+        html_table_string = html_table.replace('\n', '')
     
 # Entry retrieve data into dictionary
-    mars_data['mars_facts'] = html_table_string
+        mars_facts['mars_facts_table'] = html_table_string
 
-    return mars_data
+        return mars_facts
+
+    finally: 
+        browser.quit()
+
 
 
 ## MARS HEMISPHERES ##
 
+mars_hemispheres = {}
+
 def scrape_mars_hemispheres():
 
-    
+    # Initialize browser
+    browser = init_browser()
 
     try:
-        # Initialize browser
-        browser = init_browser()
-
+        
 # URL of page to be scraped
         hemispheres_1_url = 'https://astrogeology.usgs.gov/search/map/Mars/Viking/cerberus_enhanced'
         browser.visit(hemispheres_1_url)
 
 # Retrieve page with the requests module
-        response = requests.get(url)
+        response = requests.get(hemispheres_1_url)
 
 # Create BeautifulSoup object; parse with 'html.parser'
         soup = bs(response.text, 'html.parser')
@@ -174,16 +190,16 @@ def scrape_mars_hemispheres():
 
         title_cerberus = soup.find('h2', class_='title').text
     
-        hemisphere_list = []
+        hemisphere_list_1 = []
 
-        hemisphere_list.append({'title': title_cerberus, 'image_url': url_cerberus})
+        hemisphere_list_1.append({'title': title_cerberus, 'image_url': url_cerberus})
 
 # URL of page to be scraped
         hemispheres_2_url = 'https://astrogeology.usgs.gov/search/map/Mars/Viking/schiaparelli_enhanced'
         browser.visit(hemispheres_2_url)
 
 # Retrieve page with the requests module
-        response = requests.get(url)
+        response = requests.get(hemispheres_2_url)
 
 # Create BeautifulSoup object; parse with 'html.parser'
         soup = bs(response.text, 'html.parser')
@@ -192,15 +208,17 @@ def scrape_mars_hemispheres():
         url_schiaparelli = url_schiaparelli.get('href')
 
         title_schiaparelli = soup.find('h2', class_='title').text
+
+        hemisphere_list_2 = []
         
-        hemisphere_list.append({'title': title_schiaparelli, 'image_url': url_schiaparelli})
+        hemisphere_list_2.append({'title': title_schiaparelli, 'image_url': url_schiaparelli})
 
 # URL of page to be scraped
         hemispheres_3_url = 'https://astrogeology.usgs.gov/search/map/Mars/Viking/syrtis_major_enhanced'
         browser.visit(hemispheres_3_url)
 
 # Retrieve page with the requests module
-        response = requests.get(url)
+        response = requests.get(hemispheres_3_url)
 
 # Create BeautifulSoup object; parse with 'html.parser'
         soup = bs(response.text, 'html.parser')
@@ -209,15 +227,17 @@ def scrape_mars_hemispheres():
         url_syrtis_major = url_syrtis_major.get('href')
 
         title_syrtis_major = soup.find('h2', class_='title').text
+
+        hemisphere_list_3 = []
         
-        hemisphere_list.append({'title': title_syrtis_major, 'image_url': url_syrtis_major})
+        hemisphere_list_3.append({'title': title_syrtis_major, 'image_url': url_syrtis_major})
 
 
 # URL of page to be scraped
         hemispheres_4_url = 'https://astrogeology.usgs.gov/search/map/Mars/Viking/valles_marineris_enhanced'
 
 # Retrieve page with the requests module
-        response = requests.get(url)
+        response = requests.get(hemispheres_4_url)
         browser.visit(hemispheres_4_url)
 
 # Create BeautifulSoup object; parse with 'html.parser'
@@ -228,11 +248,14 @@ def scrape_mars_hemispheres():
     
 
         title_valles_marineris = soup.find('h2', class_='title').text
-        hemisphere_list.append({'title': title_valles_marineris, 'image_url': url_valles_marineris})
 
-        mars_data[hemisphere_list] = hemisphere_list
+        hemisphere_list_4 = []
+        hemisphere_list_4.append({'title': title_valles_marineris, 'image_url': url_valles_marineris})
 
-        return mars_data
+        mars_hemispheres = hemisphere_list_1 + hemisphere_list_2 + hemisphere_list_3 + hemisphere_list_4
+
+
+        return mars_hemispheres
 
     finally:
         browser.quit()
@@ -244,14 +267,16 @@ def scrape_mars_hemispheres():
 mars_data = scrape_mars_data_news()
 mars_images = scrape_mars_images()
 mars_weather = scrape_mars_weather()
-
+mars_facts = scrape_mars_facts()
+mars_hemispheres = scrape_mars_hemispheres()
 
 
 print(mars_data)
 print(mars_images)
-print(scrape_mars_weather)
+print(mars_weather)
+print(mars_facts)
+print (mars_hemispheres)
 
 #if __name__ == "__main__":
 #    print("blah")
 
-## NEED TO CREATE A NEW VARIABLE FOR EACH DEFINITION
