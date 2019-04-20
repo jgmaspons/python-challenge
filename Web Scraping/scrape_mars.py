@@ -166,7 +166,7 @@ def scrape_mars_facts():
 
 ## MARS HEMISPHERES ##
 
-mars_hemispheres = {}
+mars_hemispheres = []
 
 def scrape_mars_hemispheres():
 
@@ -190,9 +190,7 @@ def scrape_mars_hemispheres():
 
         title_cerberus = soup.find('h2', class_='title').text
     
-        hemisphere_list_1 = []
-
-        hemisphere_list_1.append({'title': title_cerberus, 'image_url': url_cerberus})
+        hemisphere_list_1 = {'title': title_cerberus, 'image_url': url_cerberus}
 
 # URL of page to be scraped
         hemispheres_2_url = 'https://astrogeology.usgs.gov/search/map/Mars/Viking/schiaparelli_enhanced'
@@ -209,9 +207,7 @@ def scrape_mars_hemispheres():
 
         title_schiaparelli = soup.find('h2', class_='title').text
 
-        hemisphere_list_2 = []
-        
-        hemisphere_list_2.append({'title': title_schiaparelli, 'image_url': url_schiaparelli})
+        hemisphere_list_2 = {'title': title_schiaparelli, 'image_url': url_schiaparelli}
 
 # URL of page to be scraped
         hemispheres_3_url = 'https://astrogeology.usgs.gov/search/map/Mars/Viking/syrtis_major_enhanced'
@@ -228,10 +224,7 @@ def scrape_mars_hemispheres():
 
         title_syrtis_major = soup.find('h2', class_='title').text
 
-        hemisphere_list_3 = []
-        
-        hemisphere_list_3.append({'title': title_syrtis_major, 'image_url': url_syrtis_major})
-
+        hemisphere_list_3 = {'title': title_syrtis_major, 'image_url': url_syrtis_major}
 
 # URL of page to be scraped
         hemispheres_4_url = 'https://astrogeology.usgs.gov/search/map/Mars/Viking/valles_marineris_enhanced'
@@ -249,10 +242,12 @@ def scrape_mars_hemispheres():
 
         title_valles_marineris = soup.find('h2', class_='title').text
 
-        hemisphere_list_4 = []
-        hemisphere_list_4.append({'title': title_valles_marineris, 'image_url': url_valles_marineris})
+        hemisphere_list_4 = {'title': title_valles_marineris, 'image_url': url_valles_marineris}
 
-        mars_hemispheres = hemisphere_list_1 + hemisphere_list_2 + hemisphere_list_3 + hemisphere_list_4
+        mars_hemispheres.append(hemisphere_list_1)
+        mars_hemispheres.append(hemisphere_list_2)
+        mars_hemispheres.append(hemisphere_list_3)
+        mars_hemispheres.append(hemisphere_list_4)
 
         return mars_hemispheres
 

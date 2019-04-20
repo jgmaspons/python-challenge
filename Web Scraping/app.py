@@ -47,13 +47,15 @@ def scrape():
     mars_facts = scrape_mars.scrape_mars_facts()
     #mars_hemispheres = scrape_mars.scrape_mars_hemispheres()
 
+   
+
     mars_all_data = {}
     mars_all_data['news_title'] = mars_data['news_title']
     mars_all_data['results_paragraph'] = mars_data['results_paragraph']
     mars_all_data['feature_image_url'] = mars_images['feature_image_url']
     mars_all_data['mars_weather_result'] = mars_weather['mars_weather_result']
     mars_all_data['mars_facts_table'] = mars_facts['mars_facts_table']
-    #mars_all_data['mars_hemispheres'] = mars_hemispheres['mars_hemispheres']
+    mars_all_data['mars_hemispheres'] = scrape_mars.scrape_mars_hemispheres()
 
 
     db.collection.update({}, mars_all_data, upsert=True)
@@ -62,7 +64,7 @@ def scrape():
     print(mars_images)
     print(mars_weather)
     print(mars_facts)
-    #print (mars_hemispheres)
+    #print(mars_hemispheres)
 
     return redirect("/")
 

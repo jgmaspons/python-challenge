@@ -46,13 +46,14 @@
                         <p class="card-text">{{ mars_all_data.mars_weather_result }}</p>
                     </div>
 
-                    <!-- Table -->
-                    <br>
-                    <h3>Mars Facts</h3>
-                    <div style="max-width: 450px; max-height: 150px; font-size: 15px; margin-bottom: 65px;">
-                        {{ mars_all_data.mars_facts_table }}
-                    </div>
+                   
                 </div> <!-- col4 -->
+                 <!-- Table -->
+                 <br>
+                 <h3>Mars Facts</h3>
+                 <div style="max-width: 450px; max-height: 150px; font-size: 15px; margin-bottom: 65px;">
+                     {{ mars_all_data.mars_facts_table|safe}}
+                 </div>
             </div><!-- Row -->
         </div><!-- Container -->
 
@@ -65,7 +66,7 @@
                     {% for item in mars_all_data.mars_hemispheres %}
                     <div class="col-md-6">
                         <div class="card text-white bg-dark" style="margin: 30px;">
-                            <img class="card-img-top" src="{{ item.img_url }}" />
+                            <img class="card-img-top" src="{{ item.image_url }}" />
                             <div class="card-body">
                                 <p class="card-text">{{ item.title }}</p>
                             </div>
