@@ -254,29 +254,9 @@ def scrape_mars_hemispheres():
 
         mars_hemispheres = hemisphere_list_1 + hemisphere_list_2 + hemisphere_list_3 + hemisphere_list_4
 
-
         return mars_hemispheres
 
     finally:
         browser.quit()
 
-
-
-#def main()
-
-mars_data = scrape_mars_data_news()
-mars_images = scrape_mars_images()
-mars_weather = scrape_mars_weather()
-mars_facts = scrape_mars_facts()
-mars_hemispheres = scrape_mars_hemispheres()
-
-
-print(mars_data)
-print(mars_images)
-print(mars_weather)
-print(mars_facts)
-print (mars_hemispheres)
-
-#if __name__ == "__main__":
-#    print("blah")
-
+    
